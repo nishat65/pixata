@@ -1,0 +1,32 @@
+{
+    "name": "node-pexel",
+    "version": "1.0.0",
+    "description": "pexel project",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon server.js",
+        "start:prod": "cross-env NODE_ENV=production&&nodemon server.js"
+    },
+    "author": "Nishat",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "express-mongo-sanitize": "^2.0.0",
+        "helmet": "^4.1.1",
+        "hpp": "^0.2.3",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.10.6",
+        "morgan": "^1.10.0",
+        "nodemailer": "^6.4.11",
+        "slugify": "^1.4.5",
+        "validator": "^13.1.17"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0.2",
+        "nodemon": "^2.0.4"
+    }
+}
