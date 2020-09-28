@@ -9,7 +9,7 @@ router.route('/resetPassword/:token').patch(authController.resetPassword);
 
 router.route('/signUp').post(authController.signUp);
 
-// ROUTE YET TO BE IMPLEMENTED
+// ROUTE IMPLEMENTED
 router.route('/confirmEmail/:token').get(authController.confirmEmail);
 
 router.route('/signIn').post(authController.signIn);

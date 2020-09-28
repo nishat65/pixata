@@ -34,7 +34,9 @@ exports.signUp = catchAsync(async (req, res, next) => {
     await new Email(newUser, confirmURL).sendConfirmEmailLink();
 
     res.status(201).json({
-        message: 'success',
+        status: 'success',
+        message:
+            'Confirmation email sent successfully! Please confirm your email',
         token,
         data: {
             newUser,
@@ -56,7 +58,8 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
     let token = signedToken(user._id);
     res.status(200).json({
-        message: 'success',
+        status: 'success',
+        message: 'Email confirmed successfully',
         token,
     });
 });
@@ -139,10 +142,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     const resetURL = `${req.protocol}://${req.get(
         'host'
     )}/api/v1/users/resetPassword/${resetToken}`;
-    const message = `Forgot your password? 
-  Submit a patch request with your password and confirm password to: ${resetURL}.
-  \nIf you didn't forgot your password, please ignore this email. 
-  `;
+    //     const message = `Forgot your password?
+    //   Submit a patch request with your password and confirm password to: ${resetURL}.
+    //   \nIf you didn't forgot your password, please ignore this email.
+    //   `;
     try {
         // await sendEmail({
         //     email: user.email,
