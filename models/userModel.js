@@ -56,6 +56,10 @@ const userSchema = new mongoose.Schema({
             message: 'Passwords are not the same!  ',
         },
     },
+    emailConfirmToken: {
+        type: String,
+        select: false,
+    },
     passwordResetToken: String,
     passwordResetExpires: Date,
 });
@@ -74,6 +78,12 @@ userSchema.pre('save', async function (next) {
 
     this.password = await bcrypt.hash(this.password, 12);
     this.confirmPassword = undefined;
+    next();
+});
+
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password') || this.isNew) return next();
+    this.passwordChangedAt = Date.now() - 1000;
     next();
 });
 
