@@ -1,2 +1,2 @@
 # pixata
-A picture sharing network app
+A picture sharing app
