@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
+const cors = require('cors');
 
 // LOCAL MODULE IMPORTS
 const AppError = require('./utils/appError');
@@ -20,6 +21,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
+
+app.use(cors());
 
 app.use(express.json());
 
