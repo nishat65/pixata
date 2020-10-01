@@ -25,13 +25,11 @@ exports.signUp = catchAsync(async (req, res, next) => {
         emailConfirmToken: emailToken,
     });
 
-    const confirmURL = `${req.protocol}://${req.get(
-        'host'
-    )}/api/v1/users/confirmEmail/${emailToken}`;
+    const resetURL = `${process.env.VUE_URL}confirmEmail/${emailToken}`;
 
     const token = signedToken(newUser._id);
 
-    await new Email(newUser, confirmURL).sendConfirmEmailLink();
+    await new Email(newUser, resetURL).sendConfirmEmailLink();
 
     res.status(201).json({
         status: 'success',
