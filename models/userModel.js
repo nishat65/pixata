@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
         unique: true,
         minLength: [5, 'A username should be atleast 5 character long!  '],
     },
+    photo: {
+        type: String,
+        default: 'default.jpg',
+    },
     createdAt: Date,
     passwordChangedAt: Date,
     email: {
@@ -62,6 +66,11 @@ const userSchema = new mongoose.Schema({
     },
     passwordResetToken: String,
     passwordResetExpires: Date,
+    active: {
+        type: Boolean,
+        default: true,
+        select: false,
+    },
 });
 
 userSchema.pre('save', function (next) {
@@ -84,6 +93,12 @@ userSchema.pre('save', async function (next) {
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password') || this.isNew) return next();
     this.passwordChangedAt = Date.now() - 1000;
+    next();
+});
+
+userSchema.pre(/^find/, function (next) {
+    // this points to the current query
+    this.find({ active: { $ne: false } });
     next();
 });
 

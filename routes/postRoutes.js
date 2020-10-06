@@ -6,10 +6,13 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-router.get('/', postController.getPosts);
-
+// Authentication middleware
 router.use(authController.protect);
 
+// Get all posts
+router.get('/', postController.getPosts);
+
+// Get/Create post for a user
 router
     .route('/me')
     .get(postController.getPost)

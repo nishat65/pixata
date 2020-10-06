@@ -187,3 +187,28 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
         token,
     });
 });
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user._id).select('+password');
+    if (!user)
+        return next(
+            new AppError('There is no user with that email address', 404)
+        );
+
+    if (
+        !(await user.correctPassword(req.body.currentPassword, user.password))
+    ) {
+        return next(new AppError('Your current password is wrong!', 404));
+    }
+
+    user.password = req.body.password;
+    user.confirmPassword = req.body.confirmPassword;
+    await user.save();
+    const token = signedToken(user._id);
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Password changed successfully!',
+        token,
+    });
+});
