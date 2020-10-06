@@ -35,7 +35,7 @@ const upload = multer({
 exports.uploadPostPhoto = upload.single('photo');
 
 exports.getPosts = catchAsync(async (req, res, next) => {
-    const posts = await Post.find();
+    const posts = await Post.find().populate('reviews');
     res.status(200).json({
         status: 'success',
         data: {
@@ -45,7 +45,7 @@ exports.getPosts = catchAsync(async (req, res, next) => {
 });
 
 exports.getPost = catchAsync(async (req, res, next) => {
-    const post = await Post.findOne({ user: req.user._id });
+    const post = await Post.findOne({ user: req.user._id }).populate('reviews');
     console.log(post, 'post');
     res.status(200).json({
         status: 'success',
@@ -66,3 +66,9 @@ exports.createPost = catchAsync(async (req, res, next) => {
         },
     });
 });
+
+// Update post and delete post controller is yet to be implemented
+
+exports.updatePost = catchAsync(async (req, res, next) => {});
+
+exports.deletePost = catchAsync(async (req, res, next) => {});

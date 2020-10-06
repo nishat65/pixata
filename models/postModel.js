@@ -10,12 +10,17 @@ const postSchema = new mongoose.Schema(
         description: {
             type: String,
         },
+        avgRatings: {
+            type: Number,
+            default: 0,
+        },
         hashtags: String,
         createdAt: Date,
         user: {
             type: mongoose.Schema.ObjectId,
             ref: 'User',
         },
+        // reviews: [{ type: mongoose.Schema.ObjectId, ref: 'Review' }],
     },
     {
         toJSON: { virtuals: true },
@@ -34,6 +39,13 @@ postSchema.pre(/^find/, function (next) {
         select: 'username firstname lastname',
     });
     next();
+});
+
+// Virtual populate
+postSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'post',
+    localField: '_id',
 });
 
 const Post = mongoose.model('Post', postSchema);

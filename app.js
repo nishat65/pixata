@@ -9,6 +9,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/userRoutes.js');
 const postRoutes = require('./routes/postRoutes.js');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.get('/resetPassword', (req, res, next) => {
 
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 
 app.all('*', (req, res, next) => {
     next(
