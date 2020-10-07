@@ -17,4 +17,10 @@ router
     .get(postController.getPost)
     .post(postController.uploadPostPhoto, postController.createPost);
 
+// Update/Delete post
+router
+    .route('/me/:id')
+    .patch(postController.updatePost)
+    .delete(postController.deletePost);
+
 module.exports = router;

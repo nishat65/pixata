@@ -38,6 +38,7 @@ exports.getPosts = catchAsync(async (req, res, next) => {
     const posts = await Post.find().populate('reviews');
     res.status(200).json({
         status: 'success',
+        results: posts.length,
         data: {
             posts,
         },
@@ -45,10 +46,10 @@ exports.getPosts = catchAsync(async (req, res, next) => {
 });
 
 exports.getPost = catchAsync(async (req, res, next) => {
-    const post = await Post.findOne({ user: req.user._id }).populate('reviews');
-    console.log(post, 'post');
+    const post = await Post.find({ user: req.user._id }).populate('reviews');
     res.status(200).json({
         status: 'success',
+        results: post.length,
         data: {
             post,
         },
@@ -67,8 +68,33 @@ exports.createPost = catchAsync(async (req, res, next) => {
     });
 });
 
-// Update post and delete post controller is yet to be implemented
+exports.updatePost = catchAsync(async (req, res, next) => {
+    const post = await Post.find({
+        $and: [{ _id: { $eq: req.params.id }, user: { $eq: req.user._id } }],
+    });
+    if (!post.length)
+        return next(
+            new AppError('You are not authorized to update this post!', 401)
+        );
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body);
+    res.status(200).json({
+        status: 'success',
+        data: {
+            post: updatedPost,
+        },
+    });
+});
 
-exports.updatePost = catchAsync(async (req, res, next) => {});
-
-exports.deletePost = catchAsync(async (req, res, next) => {});
+exports.deletePost = catchAsync(async (req, res, next) => {
+    const post = await Post.find({
+        $and: [{ _id: { $eq: req.params.id }, user: { $eq: req.user._id } }],
+    });
+    if (!post.length)
+        return next(
+            new AppError('You are not authorized to delete this post!', 401)
+        );
+    await Post.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+        status: 'success',
+    });
+});
