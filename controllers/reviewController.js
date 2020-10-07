@@ -25,6 +25,13 @@ exports.createReview = catchAsync(async (req, res, next) => {
 });
 
 exports.updateReview = catchAsync(async (req, res, next) => {
+    const review = await Review.find({
+        $and: [{ _id: { $eq: req.params.id }, user: { $eq: req.user._id } }],
+    });
+    if (!review.length)
+        return next(
+            new AppError('You are not authorized to update this review!', 401)
+        );
     const newReview = await Review.findByIdAndUpdate(req.params.id, req.body);
     res.status(200).json({
         message: 'success',
@@ -35,6 +42,13 @@ exports.updateReview = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteReview = catchAsync(async (req, res, next) => {
+    const review = await Review.find({
+        $and: [{ _id: { $eq: req.params.id }, user: { $eq: req.user._id } }],
+    });
+    if (!review.length)
+        return next(
+            new AppError('You are not authorized to delete this review!', 401)
+        );
     await Review.findByIdAndDelete(req.params.id);
     res.status(204).json({
         message: 'success',
