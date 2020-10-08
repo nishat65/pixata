@@ -36,7 +36,7 @@ postSchema.pre('save', function (next) {
 postSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
-        select: 'username firstname lastname',
+        select: 'username firstname lastname photo',
     });
     next();
 });
