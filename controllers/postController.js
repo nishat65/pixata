@@ -5,29 +5,6 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const utilCntrl = require('./utilController');
 
-// var multerStorage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, 'public/img/posts');
-//     },
-//     filename: function (req, file, cb) {
-//         const originalName = file.originalname.split('.')[0];
-//         const ext = file.mimetype.split('/')[1];
-//         const fileName = `${originalName}-${Date.now()}.${ext}`;
-//         cb(null, fileName);
-//     },
-// });
-
-// const multerFilter = (req, file, cb) => {
-//     if (file.mimetype.startsWith('image')) {
-//         cb(null, true);
-//     } else {
-//         cb(
-//             new AppError('Not an image! Please upload only images.', 400),
-//             false
-//         );
-//     }
-// };
-
 const { multerStorage, multerFilter } = utilCntrl.MulterUtils(
     'public/img/posts'
 );
@@ -116,10 +93,8 @@ exports.deletePost = catchAsync(async (req, res, next) => {
     });
 });
 
-// controller a searched user
-exports.getOtherPost = catchAsync(async (req, res, next) => {
+exports.getOthersPost = catchAsync(async (req, res, next) => {
     const searchObj = {};
-    console.log(req.params.id);
     if (req.params.id) searchObj.user = req.params.id;
     const post = await Post.find({ user: searchObj.user }).populate('reviews');
     res.status(200).json({
@@ -131,7 +106,7 @@ exports.getOtherPost = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.searchPostByTerms = catchAsync(async (req, res, next) => {
+exports.searchPostByTags = catchAsync(async (req, res, next) => {
     const postData = await Post.aggregate([
         {
             $project: {
@@ -161,8 +136,19 @@ exports.searchPostByTerms = catchAsync(async (req, res, next) => {
                 as: 'currentUser',
             },
         },
+        {
+            $unwind: '$currentUser',
+        },
+        {
+            $project: {
+                'currentUser._id': 0,
+                'currentUser.password': 0,
+                'currentUser.passwordChangedAt': 0,
+                'currentUser.createdAt': 0,
+                'currentUser._v': 0,
+            },
+        },
     ]);
-    // const post = await Post.find().populate('reviews');
     res.status(200).json({
         status: 'success',
         results: postData.length,

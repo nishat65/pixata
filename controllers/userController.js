@@ -3,29 +3,12 @@ const multer = require('multer');
 const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const utilCntrl = require('./utilController');
+const factory = require('../utils/factoryFunctions');
 
-var multerStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/img/users');
-    },
-    filename: function (req, file, cb) {
-        const originalName = file.originalname.split('.')[0];
-        const ext = file.mimetype.split('/')[1];
-        const fileName = `${originalName}-${Date.now()}.${ext}`;
-        cb(null, fileName);
-    },
-});
-
-const multerFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image')) {
-        cb(null, true);
-    } else {
-        cb(
-            new AppError('Not an image! Please upload only images.', 400),
-            false
-        );
-    }
-};
+const { multerStorage, multerFilter } = utilCntrl.MulterUtils(
+    'public/img/users'
+);
 
 const upload = multer({
     storage: multerStorage,
@@ -43,6 +26,28 @@ function filterObj(obj, ...allowedFields) {
     });
     return newObj;
 }
+
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+    const fields = factory.filtered(
+        '-createdAt',
+        '-passwordChangedAt',
+        '-email',
+        '-firstname',
+        '-lastname',
+        '-__v'
+    );
+    // const allUsers = await User.find({
+    //     $text: { $search: req.query.name, $language: 'en' },
+    // }).select(fields);
+    const allUsers = await User.find().select(fields);
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            allUsers,
+        },
+    });
+});
 
 exports.getMe = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.user.id);

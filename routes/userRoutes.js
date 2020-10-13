@@ -28,6 +28,8 @@ router.route('/signIn').post(authController.signIn);
 // Authentication middleware
 router.use(authController.protect);
 
+// Get all users selected data
+router.get('/users', userController.getAllUsers);
 // Getting,updating,deleting user
 router
     .route('/me')

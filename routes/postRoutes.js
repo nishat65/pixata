@@ -12,8 +12,10 @@ router.use(authController.protect);
 router.get('/', postController.getPosts);
 
 // Get/Create post for a user
-router.get('/user/:id', postController.getOtherPost);
-router.get('/search', postController.searchPostByTerms);
+router.get('/user/:id', postController.getOthersPost);
+
+// Search by hashtags route
+router.get('/search', postController.searchPostByTags);
 
 router
     .route('/me')
