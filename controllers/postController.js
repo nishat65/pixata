@@ -120,7 +120,7 @@ exports.searchPostByTags = catchAsync(async (req, res, next) => {
         { $unwind: '$hashtags' },
         { $match: { hashtags: req.query.tag } },
         {
-            // Like joins in SQL for multiple documents selection
+            // Like joins in SQL for multiple collections selection
             $lookup: {
                 from: 'reviews',
                 foreignField: 'post',
