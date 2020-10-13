@@ -12,6 +12,9 @@ router.use(authController.protect);
 router.get('/', postController.getPosts);
 
 // Get/Create post for a user
+router.get('/user/:id', postController.getOtherPost);
+router.get('/search', postController.searchPostByTerms);
+
 router
     .route('/me')
     .get(postController.getPost)

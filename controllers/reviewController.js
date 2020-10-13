@@ -1,6 +1,7 @@
 const Review = require('../models/reviewModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const utilCntrl = require('./utilController');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
     const review = await Review.find();
@@ -25,8 +26,9 @@ exports.createReview = catchAsync(async (req, res, next) => {
 });
 
 exports.updateReview = catchAsync(async (req, res, next) => {
-    const review = await Review.find({
-        $and: [{ _id: { $eq: req.params.id }, user: { $eq: req.user._id } }],
+    const review = await utilCntrl.checkForEligibilty(Review, {
+        _id: { $eq: req.params.id },
+        user: { $eq: req.user._id },
     });
     if (!review.length)
         return next(
@@ -42,8 +44,9 @@ exports.updateReview = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteReview = catchAsync(async (req, res, next) => {
-    const review = await Review.find({
-        $and: [{ _id: { $eq: req.params.id }, user: { $eq: req.user._id } }],
+    const review = await utilCntrl.checkForEligibilty(Review, {
+        _id: { $eq: req.params.id },
+        user: { $eq: req.user._id },
     });
     if (!review.length)
         return next(
