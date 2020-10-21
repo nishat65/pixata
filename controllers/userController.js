@@ -39,7 +39,14 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     // const allUsers = await User.find({
     //     $text: { $search: req.query.name, $language: 'en' },
     // }).select(fields);
-    const allUsers = await User.find().select(fields);
+    let allUsers;
+    if (req.query.username) {
+        allUsers = await User.find({
+            username: { $regex: req.query.username, $options: 'i' },
+        }).select(fields);
+    } else {
+        allUsers = await User.find().select(fields);
+    }
 
     res.status(200).json({
         status: 'success',

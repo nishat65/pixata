@@ -10,6 +10,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/userRoutes.js');
 const postRoutes = require('./routes/postRoutes.js');
 const reviewRoutes = require('./routes/reviewRoutes');
+const likeRoutes = require('./routes/likeRoutes');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.get('/resetPassword', (req, res, next) => {
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/likes', likeRoutes);
 
 app.all('*', (req, res, next) => {
     next(
