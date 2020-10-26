@@ -3,10 +3,20 @@ const validator = require('validator');
 
 const postSchema = new mongoose.Schema(
     {
+        //local system storage
         photo: {
             type: String,
             required: [true, 'Please upload a photo!'],
         },
+        //for cloundinary storage
+        // photoName: {
+        //     type: String,
+        //     required: [true, 'Please upload a photo!'],
+        // },
+        // photoUrl: {
+        //     type: String,
+        //     required: [true, 'Please upload a photo!'],
+        // },
         description: {
             type: String,
         },

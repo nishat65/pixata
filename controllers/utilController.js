@@ -1,4 +1,18 @@
 const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+const cloudinary = require('../utils/cloudinaryConfig');
+
+exports.cloudinaryStorage = (path) =>
+    new CloudinaryStorage({
+        cloudinary,
+        params: {
+            folder: path,
+            allowedFormats: ['jpeg', 'png', 'jpg', 'gif'],
+            // format: async (req, file) => 'png', // supports promises as well
+            // public_id: (req, file) => 'computed-filename-using-request',
+        },
+    });
 
 exports.checkForEligibilty = async (Model, condition) => {
     const model = await Model.find({
