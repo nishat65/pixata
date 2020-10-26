@@ -8,6 +8,13 @@ const router = express.Router();
 // Authentication middleware
 router.use(authController.protect);
 
-router.post('/liked', likeController.postLiked);
+router.route('/all').get(likeController.getAllLiked);
+
+router
+    .route('/me')
+    .get(likeController.getUserLiked)
+    .post(likeController.postLiked);
+
+router.delete('/unlike/:id', likeController.removeLiked);
 
 module.exports = router;

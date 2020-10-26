@@ -24,6 +24,10 @@ const postSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        liked: {
+            type: Number,
+            default: 0,
+        },
         hashtags: String,
         createdAt: Date,
         user: {
